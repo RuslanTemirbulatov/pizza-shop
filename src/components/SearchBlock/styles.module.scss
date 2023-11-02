@@ -1,0 +1,34 @@
+.root {
+    position: relative;
+}
+
+.input {
+    width: 300px;
+    font-size: 16px;
+    padding: 12px 35px;
+    border-radius: 10px;
+    opacity: 0.5;
+    color: black;
+    &:focus {
+        opacity: 0.8;
+    }
+}
+
+.search {
+    position: absolute;
+    top: 14px;
+    left: 10px;
+    opacity: 0.3;
+}
+
+.clear {
+    position: absolute;
+    top: 13px;
+    right: 5px;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: 0.2s;
+    &:hover {
+        opacity: 0.6;
+    }
+}
