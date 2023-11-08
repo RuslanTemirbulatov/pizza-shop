@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from "react";
 import SkeletonPizza from "../components/PizzaBlock/SkeletonPizza";
-import Sort from "../components/Sort";
+import Sort from "../components/Sort.tsx";
 import Categories from "../components/Categories";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategoryId } from "../redux/slices/filteredSlice";
-import { setItems, fetchPizzas } from "../redux/slices/pizzaSlice";
+import { setCategoryId, selectFilter } from "../redux/slices/filteredSlice";
+import { setItems, fetchPizzas, selectPizzas } from "../redux/slices/pizzaSlice";
+import { useAppDispatch } from "../redux/store.ts";
 
-const Home = () => {
+const Home: React.FC = () => {
+  const { category, page, searchValue, sort } = useSelector(selectFilter);
+  const { items, status } = useSelector(selectPizzas);
 
-  const { category, page, searchValue, sort } = useSelector(
-    (state) => state.filtered
-  );
-
-  const { items, status } = useSelector((state) => state.pizza);
-
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const order = sort.sortProperty.includes("-") ? "asc" : "desc";
     const sortBy = sort.sortProperty.replace("-", "");
     const categoryId = category > 0 ? `category=${category}` : "";
-    dispatch(fetchPizzas({ order, sortBy, categoryId, page, searchValue }));
+    dispatch(fetchPizzas({ order, sortBy, categoryId, page: String(page), searchValue }));
     window.scrollTo(0, 0);
   }, [category, sort, page, searchValue]);
 
@@ -32,7 +29,7 @@ const Home = () => {
         <div className="content__top">
           <Categories
             value={category}
-            onClickCategory={(i) => dispatch(setCategoryId(i))}
+            onClickCategory={(i: number) => dispatch(setCategoryId(i))}
           />
           <Sort />
         </div>
@@ -46,7 +43,7 @@ const Home = () => {
           <div className="content__items">
             {status === "loading"
               ? [...new Array(6)].map((_, i) => <SkeletonPizza key={i} />)
-              : items.map((item) => (
+              : items.map((item: any) => (
                   <PizzaBlock key={item.imageUrl} {...item} />
                 ))}
           </div>

@@ -15,7 +15,7 @@ const theme = createTheme({
   },
 });
 
-const PaginationBlock = () => {
+const PaginationBlock:React.FC = () => {
 
   const dispatch = useDispatch()
   return (

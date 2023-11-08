@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import {
     addCartItem,
@@ -6,20 +6,26 @@ import {
     clearItem
   } from "../redux/slices/cartSlice";
   
+type CartItemProps = {id: string, imageUrl: string, count: number, price: number, title: string, type: string, size: number}
 
-const CartItem = ({id, imageUrl, count, price, title, type, size}) => {
+const CartItem: React.FC<CartItemProps> = ({id, imageUrl, count, price, title, type, size}) => {
     const dispatch = useDispatch()
 
     const onClickPizzaPlus = () => {
-        dispatch(addCartItem({id}))
+        dispatch(addCartItem({
+          id,
+          imageUrl: '',
+          count: 0,
+          price: 0,
+          title: '',
+          type: '',
+          size: 0
+        }))
     }
-
     const onClickPizzaMinus = () => {
         dispatch(removeCartItem(id))
-        if (count == 1) {
-          onClickClearItem()
-        }
     }
+
 
     const onClickClearItem = () => {
       dispatch(clearItem(id));
@@ -39,7 +45,7 @@ const CartItem = ({id, imageUrl, count, price, title, type, size}) => {
               <p>{type}, {size} см.</p>
             </div>
             <div className="cart__item-count">
-              <div onClick={onClickPizzaMinus} className="button button--outline button--circle cart__item-count-minus">
+              <button disabled={count === 1} onClick={onClickPizzaMinus} className={count !== 1 ? "button button--outline button--circle cart__item-count-minus" : "button button--outline button--circle cart__item-count-minus cart__item-count-minus--disabled "}>
                 <svg
                   width="10"
                   height="10"
@@ -56,7 +62,7 @@ const CartItem = ({id, imageUrl, count, price, title, type, size}) => {
                     fill="#EB5A1E"
                   />
                 </svg>
-              </div>
+              </button>
               <b>{count}</b>
               <div onClick={onClickPizzaPlus} className="button button--outline button--circle cart__item-count-plus">
                 <svg

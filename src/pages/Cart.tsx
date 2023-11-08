@@ -4,21 +4,20 @@ import CartItem from "../components/CartItem";
 import { useSelector, useDispatch } from "react-redux";
 import {clearItems} from "../redux/slices/cartSlice";
 import CartEmpty from "../components/CartEmpty";
+import { RootState, useAppDispatch } from "../redux/store";
 
-const Cart = () => {
-  const dispatch = useDispatch()
+const Cart: React.FC = () => {
+  const dispatch = useAppDispatch()
   const onClickClearItems = () => {
-    dispatch(clearItems([]));
+    dispatch(clearItems());
   };
-
-  const { cartItems, totalPrice, count } = useSelector((state) => state.cart);
+  const { cartItems, totalPrice, count } = useSelector((state: RootState) => state.cart);
   return (
     <div className="container container--cart">
       {cartItems.length > 0 ? 
            <div className="cart">
            <div className="cart__top">
              <h2 className="content__title">
-               
                <svg
                  width="18"
                  height="18"
@@ -87,12 +86,11 @@ const Cart = () => {
                    strokeLinejoin="round"
                  />
                </svg>
-   
                <span>Очистить корзину</span>
              </div>
            </div>
            <div className="content__items">
-             {cartItems.map((item) => (
+             {cartItems.map((item: any) => (
                <CartItem {...item} />
              ))}
            </div>
@@ -127,7 +125,6 @@ const Cart = () => {
                      strokeLinejoin="round"
                    />
                  </svg>
-   
                  <span>Вернуться назад</span>
                </Link>
                <div className="button pay-btn">
@@ -136,7 +133,6 @@ const Cart = () => {
              </div>
            </div>
          </div> : <CartEmpty/> }
-      
     </div>
   );
 };

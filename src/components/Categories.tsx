@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Categories = ({value, onClickCategory}) => {
+type CategoriesProps = {value: number, onClickCategory: (i: number) => void}
+
+const Categories: React.FC<CategoriesProps> = ({value, onClickCategory}) => {
   const categories = [
     "Все",
     "Мясные",
@@ -9,7 +11,7 @@ const Categories = ({value, onClickCategory}) => {
     "Острые",
     "Закрытые",
   ];
-  const onClickCategories = (index) => {
+  const onClickCategories: (index: number) => void = (index) => {
     onClickCategory(index)
   }
 

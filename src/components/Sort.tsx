@@ -1,40 +1,45 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSort } from '../redux/slices/filteredSlice'
+import { RootState } from "../redux/store";
 
+type SortItem = {name: string; sortProperty: 'rating' | '-rating' | 'price' | '-price' | 'title'| '-title' }
 
-const Sort = () => {
+const Sort: React.FC = () => {
   const [openPopup, setOpenPopup] = useState(false);
-  const sortList = [
-    { name: "популярности(DESC)", sortProperty: "rating" },
-    { name: "популярности(ASC)", sortProperty: "-rating" },
-    { name: "цене(дороже)", sortProperty: "price" },
-    { name: "цене(дешевле)", sortProperty: "-price" },
-    { name: "алфавиту(от Я до А)", sortProperty: "title" },
-    { name: "алфавиту(от А до Я)", sortProperty: "-title" }
+  const sortList: SortItem[] = [
+    { name: "популярности(DESC)", sortProperty: 'rating' },
+    { name: "популярности(ASC)", sortProperty: '-rating' },
+    { name: "цене(дороже)", sortProperty: 'price' },
+    { name: "цене(дешевле)", sortProperty: '-price' },
+    { name: "алфавиту(от Я до А)", sortProperty: 'title' },
+    { name: "алфавиту(от А до Я)", sortProperty: '-title' }
   ];
 
-const sortType = useSelector((state) => state.filtered.sort);
+const sortType = useSelector((state: RootState) => state.filtered.sort);
 const dispatch = useDispatch()
 
-  const onClickSortCategory = (obj) => {
-    dispatch(setSort(obj));
-    setOpenPopup((prev) => !prev);
-  };
+const onClickSortCategory = (obj: SortItem) => {
+  dispatch(setSort(obj));
+  setOpenPopup((prev) => !prev);
+};
 
-  const sortRef = useRef()
+const sortRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.composedPath().includes(sortRef.current)) {
-       setOpenPopup(false)
-      } 
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    const _event = event as MouseEvent & {
+      path: Node[];
     }
-    document.body.addEventListener('click', handleClickOutside)
-    return () => {
-      document.body.removeEventListener('click', handleClickOutside)
-    }
-  }, [])
+    if (sortRef.current && !_event.composedPath().includes(sortRef.current)) {
+      setOpenPopup(false)
+    } 
+  }
+  document.body.addEventListener('click', handleClickOutside)
+  return () => {
+    document.body.removeEventListener('click', handleClickOutside)
+  }
+}, [])
 
   return (
     <div className="sort" ref={sortRef}>
